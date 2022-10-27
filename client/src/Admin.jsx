@@ -1,11 +1,17 @@
-import React,{useEffect} from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 import AdminNav from "./components/Admin/AdminNav";
-import AdminPanel from "./components/Admin/AllProducts";
-import EditProductPage from "./components/Admin/EditProductPage";
-import AddProductPage from "./components/Admin/AddProductPage";
-import AddAdmin from "./components/Admin/AddAdmin";
+// import AdminPanel from "./components/Admin/AllProducts";
+// import EditProductPage from "./components/Admin/EditProductPage";
+// import AddProductPage from "./components/Admin/AddProductPage";
+// import AddAdmin from "./components/Admin/AddAdmin";
 import { Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+
+const AdminPanel = lazy(() => import('./components/Admin/AllProducts'));
+const AddAdmin = lazy(() => import('./components/Admin/AddAdmin'));
+const AddProductPage = lazy(() => import('./components/Admin/AddProductPage'));
+const EditProductPage = lazy(() => import('./components/Admin/EditProductPage'));
+
 const Admin = () => {
   const navigate = useNavigate();
   const verifyAdmin = async () => {
@@ -29,12 +35,14 @@ const Admin = () => {
   return (
     <>
       <AdminNav />
-      <Routes>
-        <Route path="/" element={<AdminPanel />} />
-        <Route path="/addadmin" element={<AddAdmin />} />
-        <Route path="/addproduct" element={<AddProductPage />} />
-        <Route path="/editproduct/:id" element={<EditProductPage />} />
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<AdminPanel />} />
+          <Route path="/addadmin" element={<AddAdmin />} />
+          <Route path="/addproduct" element={<AddProductPage />} />
+          <Route path="/editproduct/:id" element={<EditProductPage />} />
+        </Routes>
+      </Suspense>
     </>
   );
 };
